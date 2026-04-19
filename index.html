@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>مدير التعليقات</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <style>
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background-image:
+          linear-gradient(rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.85)),
+          url("https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=2000&auto=format&fit=crop");
+        background-size: cover;
+        background-attachment: fixed;
+        color: #20374e;
+        margin: 0;
+        padding: 40px 20px;
+        direction: rtl;
+      }
+
+      h1 {
+        text-align: center;
+        color: #20374e;
+        font-size: 3rem;
+        margin-bottom: 40px;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+      }
+
+      /* تنسيق الفورم (Form) */
+      #form-comment {
+        background: #ffffff;
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        max-width: 550px;
+        margin: 0 auto 60px auto;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        border-top: 8px solid #3498db;
+      }
+
+      .input-container {
+        position: relative;
+        display: flex;
+        align-items: center;
+      }
+
+      .input-container i {
+        position: absolute;
+        right: 15px;
+        color: #3498db;
+        font-size: 1.1rem;
+      }
+
+      input,
+      textarea {
+        width: 100%;
+        padding: 12px 45px 12px 15px;
+        border: 2px solid #bdc3c7;
+        border-radius: 8px;
+        font-size: 16px;
+        background: #fdfdfd;
+        color: #2c3e50;
+        box-sizing: border-box;
+        font-family: inherit;
+        transition: border-color 0.3s;
+      }
+
+      input:focus,
+      textarea:focus {
+        outline: none;
+        border-color: #3498db;
+        background: #fff;
+      }
+
+      #submit-btn {
+        background-color: #3498db;
+        color: white;
+        border: none;
+        padding: 15px;
+        border-radius: 8px;
+        font-weight: bold;
+        font-size: 1.1rem;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+      }
+
+      #submit-btn:hover {
+        background-color: #2980b9;
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+      }
+
+      /* تنسيق عرض التعليقات بجانب بعض (Grid/Flex) */
+      #list-comment {
+        max-width: 1100px;
+        margin: 0 auto;
+        display: flex;
+        flex-wrap: wrap; /* يسمح للتعليقات بالانتقال لسطر جديد */
+        gap: 25px;
+        justify-content: center;
+      }
+
+      .comment-card {
+        background: #ffffff;
+        padding: 25px;
+        border-radius: 12px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        border-right: 6px solid #3498db;
+
+        /* تحديد العرض: كرتين في كل سطر على الشاشات الكبيرة */
+        width: calc(50% - 25px);
+        min-width: 320px; /* لضمان عدم صغر الحجم جداً في الموبايل */
+
+        display: flex;
+        flex-direction: column;
+        box-sizing: border-box;
+        transition: transform 0.3s;
+      }
+
+      .comment-card:hover {
+        transform: scale(1.02);
+      }
+
+      .comment-card h3 {
+        margin: 0 0 10px 0;
+        color: #2c3e50;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 1.3rem;
+      }
+
+      .email-text {
+        color: #2980b9;
+        font-weight: 500;
+        word-break: break-all; /* لمنع الإيميلات الطويلة من تخريب التصميم */
+      }
+
+      .body-text {
+        line-height: 1.6;
+        color: #444;
+        background: #f9f9f9;
+        padding: 15px;
+        border-radius: 8px;
+        margin-top: 10px;
+        flex-grow: 1; /* يجعل صندوق النص يملأ المساحة المتبقية */
+      }
+
+      .actions {
+        margin-top: 20px;
+        display: flex;
+        gap: 15px;
+      }
+
+      .edit-btn,
+      .delete-btn {
+        flex: 1; /* يجعل الأزرار متساوية العرض */
+        border: none;
+        padding: 10px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        color: white;
+        font-size: 0.9rem;
+      }
+
+      .edit-btn {
+        background-color: #3498db;
+      }
+      .delete-btn {
+        background-color: #e74c3c;
+      }
+
+      .edit-btn:hover {
+        background-color: #2980b9;
+      }
+      .delete-btn:hover {
+        background-color: #c0392b;
+      }
+
+      /* للموبايل: كرت واحد في كل سطر */
+      @media (max-width: 768px) {
+        .comment-card {
+          width: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <h1><i class="fas fa-comments"></i> مدير التعليقات</h1>
+
+    <form id="form-comment">
+      <div class="input-container">
+        <i class="fas fa-user"></i>
+        <input type="text" id="Idname" placeholder="الاسم" required />
+      </div>
+
+      <div class="input-container">
+        <i class="fas fa-envelope"></i>
+        <input
+          type="email"
+          id="Idemail"
+          placeholder="البريد الإلكتروني"
+          required
+        />
+      </div>
+
+      <div class="input-container">
+        <i class="fas fa-pen"></i>
+        <textarea
+          id="Idbody"
+          placeholder="اكتب تعليقك هنا..."
+          rows="4"
+          required
+        ></textarea>
+      </div>
+
+      <button type="submit" id="submit-btn">
+        <i class="fas fa-paper-plane"></i>
+        <span>إضافة تعليق</span>
+      </button>
+    </form>
+
+    <div id="list-comment"></div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
